@@ -1733,7 +1733,7 @@ namespace ImGuizmo
       return type;
    }
 
-   static bool HandleTranslation(float* matrix, float* deltaMatrix, int& type, float* snap)
+   static bool HandleTranslation(float* matrix, float* deltaMatrix, int& type, float* snap, bool abort = false)
    {
       ImGuiIO& io = ImGui::GetIO();
       bool applyRotationLocaly = gContext.mMode == LOCAL || type == MOVE_SCREEN;
@@ -1842,7 +1842,7 @@ namespace ImGuizmo
       return modified;
    }
 
-   static bool HandleScale(float* matrix, float* deltaMatrix, int& type, float* snap)
+   static bool HandleScale(float* matrix, float* deltaMatrix, int& type, float* snap, bool abort = false)
    {
       ImGuiIO& io = ImGui::GetIO();
       bool modified = false;
@@ -1893,12 +1893,12 @@ namespace ImGuizmo
             vec_t baseVector = gContext.mTranslationPlanOrigin - gContext.mModel.v.position;
             float ratio = Dot(axisValue, baseVector + delta) / Dot(axisValue, baseVector);
 
-            gContext.mScale[axisIndex] = max(ratio, 0.001f);
+            gContext.mScale[axisIndex] = !abort ? max(ratio, 0.001f) : 1.f;
          }
          else
          {
             float scaleDelta = (io.MousePos.x - gContext.mSaveMousePosx) * 0.01f;
-            gContext.mScale.Set(max(1.f + scaleDelta, 0.001f));
+            gContext.mScale.Set(!abort ? max(1.f + scaleDelta, 0.001f) : 1.f);
          }
 
          // snap
@@ -1939,7 +1939,7 @@ namespace ImGuizmo
       return modified;
    }
 
-   static bool HandleRotation(float* matrix, float* deltaMatrix, int& type, float* snap)
+   static bool HandleRotation(float* matrix, float* deltaMatrix, int& type, float* snap, bool abort = false)
    {
       ImGuiIO& io = ImGui::GetIO();
       bool applyRotationLocaly = gContext.mMode == LOCAL;
@@ -2090,7 +2090,8 @@ namespace ImGuizmo
       gContext.mActualID = id;
    }
 
-   bool Manipulate(const float* view, const float* projection, OPERATION operation, MODE mode, float* matrix, float* deltaMatrix, float* snap, float* localBounds, float* boundsSnap)
+   bool Manipulate(const float* view, const float* projection, OPERATION operation, MODE mode, float* matrix,
+      float* deltaMatrix, float* snap, float* localBounds, float* boundsSnap, bool abort)
    {
       ComputeContext(view, projection, matrix, mode);
 
@@ -2118,13 +2119,13 @@ namespace ImGuizmo
             switch (operation)
             {
             case ROTATE:
-               manipulated = HandleRotation(matrix, deltaMatrix, type, snap);
+               manipulated = HandleRotation(matrix, deltaMatrix, type, snap, abort);
                break;
             case TRANSLATE:
-               manipulated = HandleTranslation(matrix, deltaMatrix, type, snap);
+               manipulated = HandleTranslation(matrix, deltaMatrix, type, snap, abort);
                break;
             case SCALE:
-               manipulated = HandleScale(matrix, deltaMatrix, type, snap);
+               manipulated = HandleScale(matrix, deltaMatrix, type, snap, abort);
                break;
             case BOUNDS:
                break;
