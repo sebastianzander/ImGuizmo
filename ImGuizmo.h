@@ -149,6 +149,14 @@ namespace ImGuizmo
 	// default is false
 	IMGUI_API void SetOrthographic(bool isOrthographic);
 
+   IMGUI_API void SetXAxisColor(ImU32 color);
+   IMGUI_API void SetYAxisColor(ImU32 color);
+   IMGUI_API void SetZAxisColor(ImU32 color);
+   IMGUI_API void SetXPlaneColor(ImU32 color);
+   IMGUI_API void SetYPlaneColor(ImU32 color);
+   IMGUI_API void SetZPlaneColor(ImU32 color);
+   IMGUI_API void SetSelectionColor(ImU32 color);
+
 	// Render a cube with face color corresponding to face normal. Usefull for debug/tests
 	IMGUI_API void DrawCubes(const float *view, const float *projection, const float *matrices, int matrixCount);
 	IMGUI_API void DrawGrid(const float *view, const float *projection, const float *matrix, const float gridSize);

@@ -684,11 +684,11 @@ namespace ImGuizmo
    static const float planeLimit = 0.2f;
 
    static const vec_t directionUnary[3] = { makeVect(1.f, 0.f, 0.f), makeVect(0.f, 1.f, 0.f), makeVect(0.f, 0.f, 1.f) };
-   static const ImU32 directionColor[3] = { 0xFF715ED8, 0xFF25AA25, 0xFFCC532C };
+   static ImU32 directionColor[3] = { 0xFF715ED8, 0xFF25AA25, 0xFFCC532C };
 
    // Alpha: 100%: FF, 87%: DE, 70%: B3, 54%: 8A, 50%: 80, 38%: 61, 12%: 1F
-   static const ImU32 planeColor[3] = { 0xFF7A68D8, 0xFF55AB55, 0xFFD96742 };
-   static const ImU32 selectionColor = 0xFF20AACC;
+   static ImU32 planeColor[3] = { 0xFF7A68D8, 0xFF55AB55, 0xFFD96742 };
+   static ImU32 selectionColor = 0xFF20AACC;
    static const ImU32 inactiveColor = 0x99999999;
    static const ImU32 translationLineColor = 0xAAAAAAAA;
    static const char* translationInfoMask[] = { "X : %5.3f", "Y : %5.3f", "Z : %5.3f",
@@ -844,6 +844,41 @@ namespace ImGuizmo
    void SetOrthographic(bool isOrthographic)
    {
       gContext.mIsOrthographic = isOrthographic;
+   }
+
+   void SetXAxisColor(ImU32 color)
+   {
+      directionColor[0] = color;
+   }
+
+   void SetYAxisColor(ImU32 color)
+   {
+      directionColor[2] = color;
+   }
+
+   void SetZAxisColor(ImU32 color)
+   {
+      directionColor[1] = color;
+   }
+
+   void SetXPlaneColor(ImU32 color)
+   {
+      planeColor[0] = color;
+   }
+
+   void SetYPlaneColor(ImU32 color)
+   {
+      planeColor[2] = color;
+   }
+
+   void SetZPlaneColor(ImU32 color)
+   {
+      planeColor[1] = color;
+   }
+
+   void SetSelectionColor(ImU32 color)
+   {
+      selectionColor = color;
    }
 
    void SetDrawlist(ImDrawList* drawlist)
@@ -1307,7 +1342,7 @@ namespace ImGuizmo
                vec_t cornerWorldPos = (dirPlaneX * quadUV[j * 2] + dirPlaneY * quadUV[j * 2 + 1]) * gContext.mScreenFactor;
                screenQuadPts[j] = worldToPos(cornerWorldPos, gContext.mMVP);
             }
-            drawList->AddPolyline(screenQuadPts, 4, directionColor[i], true, 1.0f);
+            //drawList->AddPolyline(screenQuadPts, 4, directionColor[i], true, 1.0f);
             drawList->AddConvexPolyFilled(screenQuadPts, 4, colors[i + 4]);
          }
       }
